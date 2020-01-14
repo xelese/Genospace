@@ -7,6 +7,9 @@ import org.hibernate.annotations.LazyCollectionOption;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * This class represents the Development summary table.
+ */
 @Entity
 @Table(name = "development_status_summary")
 public class DevelopmentStatusSummary {
@@ -32,7 +35,7 @@ public class DevelopmentStatusSummary {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<AdministrationRoutes> administrationRoutesList;
 
-    @OneToMany(mappedBy = "developmentStatusSummary", cascade = CascadeType.REMOVE)
+    @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Organizations> organizations;
 
@@ -48,8 +51,8 @@ public class DevelopmentStatusSummary {
 
     public void setOrgForDSS(Organizations org) {
         this.organizations.add(org);
-        if (org.getDevelopmentStatusSummary() != this)
-            org.setDevelopmentStatusSummary(this);
+        if (!org.getDevelopmentStatusSummary().contains(this))
+            org.getDevelopmentStatusSummary().add(this);
     }
 
     public void setDrugForDSS(Drug drug) {

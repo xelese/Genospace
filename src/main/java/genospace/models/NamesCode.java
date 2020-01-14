@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
+/**
+ * This class represents the names code table.
+ */
 @Entity
 @Table(name = "names_code")
 public class NamesCode {

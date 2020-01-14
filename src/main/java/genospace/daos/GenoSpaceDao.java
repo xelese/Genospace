@@ -3,7 +3,6 @@ package genospace.daos;
 import genospace.models.Drug;
 import genospace.models.Mechanism;
 import genospace.repositories.DrugRepository;
-import genospace.repositories.MechanismMolecularRepository;
 import genospace.repositories.MechanismRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,6 +10,9 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is a data access object that does the actual fetching of the data.
+ */
 @Component
 public class GenoSpaceDao implements GenoSpaceInterface {
 
@@ -19,9 +21,6 @@ public class GenoSpaceDao implements GenoSpaceInterface {
 
     @Autowired
     MechanismRepository mechanismRepository;
-
-    @Autowired
-    MechanismMolecularRepository mechanismMolecularRepository;
 
     @Override
     public List<Object> findByName(String name) {
@@ -43,7 +42,6 @@ public class GenoSpaceDao implements GenoSpaceInterface {
 
     @Override
     public List<Drug> findDrugForMechanism(Integer id) {
-        return mechanismMolecularRepository.findDrugForMechanismById(id);
+        return mechanismRepository.findDrugForMechanismById(id);
     }
-
 }

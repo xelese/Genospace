@@ -1,6 +1,5 @@
 package genospace;
 
-import genospace.controllers.GenoSpaceController;
 import genospace.daos.GenoSpaceDao;
 import genospace.models.*;
 import genospace.repositories.*;
@@ -33,9 +32,6 @@ public class GenospaceWebApplicationTests {
     MechanismRepository mechanismRepository;
 
     @Autowired
-    MechanismMolecularRepository mechanismMolecularRepository;
-
-    @Autowired
     DevelopmentStatusSummaryRepository dssRepository;
 
     @Autowired
@@ -54,7 +50,7 @@ public class GenospaceWebApplicationTests {
 
         Drug drug1 = new Drug();
         drug1.setId(108485);
-        drug1.setName("Temozolomide");
+        drug1.setNameMain("Temozolomide");
 
         // name generic
         drug1.setNameGeneric("Temozolomide");
@@ -106,12 +102,6 @@ public class GenospaceWebApplicationTests {
 
         mechanismRepository.save(mechanism1);
 
-        mechanism1 = mechanismRepository.findById(4076).get();
-
-        MechanismsMolecular mechanismsMolecular1 = new MechanismsMolecular(drug, mechanism1);
-
-        mechanismMolecularRepository.save(mechanismsMolecular1);
-        drugRepository.save(drug);
 
         Mechanism mechanism2 = new Mechanism();
         mechanism2.setId(1895);
@@ -119,12 +109,6 @@ public class GenospaceWebApplicationTests {
 
         mechanismRepository.save(mechanism2);
 
-        mechanism2 = mechanismRepository.findById(1895).get();
-
-        MechanismsMolecular mechanismsMolecular2 = new MechanismsMolecular(drug, mechanism2);
-
-        mechanismMolecularRepository.save(mechanismsMolecular2);
-        drugRepository.save(drug);
 
         Mechanism mechanism3 = new Mechanism();
         mechanism3.setId(5296);
@@ -132,12 +116,23 @@ public class GenospaceWebApplicationTests {
 
         mechanismRepository.save(mechanism3);
 
+        mechanism1 = mechanismRepository.findById(4076).get();
+        mechanism2 = mechanismRepository.findById(1895).get();
         mechanism3 = mechanismRepository.findById(5296).get();
 
-        MechanismsMolecular mechanismsMolecular3 = new MechanismsMolecular(drug, mechanism3);
+        drug.setMechanismForDrug(mechanism1);
+        drug.setMechanismForDrug(mechanism2);
+        drug.setMechanismForDrug(mechanism3);
 
-        mechanismMolecularRepository.save(mechanismsMolecular3);
         drugRepository.save(drug);
+
+        mechanism1.setDrugForMechanism(drug);
+        mechanism2.setDrugForMechanism(drug);
+        mechanism3.setDrugForMechanism(drug);
+
+        mechanismRepository.save(mechanism1);
+        mechanismRepository.save(mechanism2);
+        mechanismRepository.save(mechanism3);
 
         DevelopmentStatusSummary dss1 = new DevelopmentStatusSummary();
         dss1.setDrug(drug);
@@ -154,7 +149,6 @@ public class GenospaceWebApplicationTests {
 
         Organizations org = new Organizations();
         org.setId(424);
-        org.setDSSForOrg(dss1);
         org.setDescription("Merck &amp; Co.");
 
         AdministrationRoutes ar = new AdministrationRoutes();
@@ -163,6 +157,11 @@ public class GenospaceWebApplicationTests {
         ar.setDescription("parenteral");
 
         orgRepository.save(org);
+
+        org = orgRepository.findById(424).get();
+
+        dss1.setOrgForDSS(org);
+
         arRepository.save(ar);
         dssRepository.save(dss1);
 
@@ -180,7 +179,7 @@ public class GenospaceWebApplicationTests {
 
         dss2 = dssRepository.findById(582).get();
 
-        org.setDSSForOrg(dss2);
+        dss2.setOrgForDSS(org);
 
         AdministrationRoutes ar1 = new AdministrationRoutes();
         ar1.setId(3);
@@ -215,14 +214,8 @@ public class GenospaceWebApplicationTests {
     @Test
     public void checkDAO2() {
 
-        GenoSpaceController controller = new GenoSpaceController();
+        Drug drug = genoSpaceDao.findDrugById(108485);
 
-        Drug drug = controller.findDrugById("108485");
-
-        List<MechanismsMolecular> x = drug.getMechanismsMolecular();
-
-        for (MechanismsMolecular o : x) {
-            System.out.println(o.toString());
-        }
+        System.out.println(drug.toString());
     }
 }

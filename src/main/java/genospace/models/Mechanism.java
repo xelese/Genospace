@@ -1,11 +1,18 @@
 package genospace.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.List;
 
+/**
+ * This class represents the mechanism table.
+ */
 @Entity
 @Table(name = "mechanism")
 public class Mechanism {
@@ -15,17 +22,20 @@ public class Mechanism {
 
     private String name;
 
-    @OneToMany(mappedBy = "mechanism", cascade = CascadeType.REMOVE)
+    @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<MechanismsMolecular> mechanismsMolecular;
+    @JsonIgnore
+    private List<Drug> drug;
 
     public Mechanism() {
     }
 
-    public void setMechanismMolecularForMechanism(MechanismsMolecular molecular) {
-        this.mechanismsMolecular.add(molecular);
-        if (molecular.getMechanism() != this)
-            molecular.setMechanism(this);
+    public void setDrugForMechanism(Drug drug) {
+        if (!this.drug.contains(drug)) {
+            this.drug.add(drug);
+        }
+        if (!drug.getMechanism().contains(this))
+            drug.getMechanism().add(this);
     }
 
     public Integer getId() {
@@ -36,14 +46,6 @@ public class Mechanism {
         this.id = id;
     }
 
-    public List<MechanismsMolecular> getMechanismsMolecular() {
-        return mechanismsMolecular;
-    }
-
-    public void setMechanismsMolecular(List<MechanismsMolecular> mechanismsMolecular) {
-        this.mechanismsMolecular = mechanismsMolecular;
-    }
-
     public String getDescription() {
         return name;
     }
@@ -52,12 +54,28 @@ public class Mechanism {
         this.name = description;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Drug> getDrug() {
+        return drug;
+    }
+
+    public void setDrug(List<Drug> drug) {
+        this.drug = drug;
+    }
+
     @Override
     public String toString() {
         return "Mechanism{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", mechanismsMolecular=" + mechanismsMolecular +
+                ", drug=" + drug +
                 '}';
     }
 }

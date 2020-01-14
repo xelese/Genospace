@@ -7,6 +7,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * This class represents the administration routes table.
+ */
 @Entity
 @Table(name = "administration_routes")
 public class AdministrationRoutes {

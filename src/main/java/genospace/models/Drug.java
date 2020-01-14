@@ -1,11 +1,15 @@
 package genospace.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * This class represents the drug table.
+ */
 @Entity
 @Table(name = "drug")
 public class Drug {
@@ -25,9 +29,10 @@ public class Drug {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<NamesBrand> namesBrand;
 
-    @OneToMany(mappedBy = "drug", cascade = CascadeType.REMOVE)
+    @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<MechanismsMolecular> mechanismsMolecular;
+    @JsonManagedReference
+    private List<Mechanism> mechanism;
 
     @OneToMany(mappedBy = "drug", cascade = CascadeType.REMOVE)
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -48,10 +53,12 @@ public class Drug {
             namesBrand.setDrug(this);
     }
 
-    public void setMechanismMolecularForDrug(MechanismsMolecular molecular) {
-        this.mechanismsMolecular.add(molecular);
-        if (molecular.getDrug() != this)
-            molecular.setDrug(this);
+    public void setMechanismForDrug(Mechanism mechanism) {
+        if (!this.mechanism.contains(mechanism)) {
+            this.mechanism.add(mechanism);
+        }
+        if (!mechanism.getDrug().contains(this))
+            mechanism.getDrug().add(this);
     }
 
     public void setDSSForDrug(DevelopmentStatusSummary dss) {
@@ -66,14 +73,6 @@ public class Drug {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return nameMain;
-    }
-
-    public void setName(String name) {
-        this.nameMain = name;
     }
 
     public String getNameGeneric() {
@@ -100,13 +99,6 @@ public class Drug {
         this.namesBrand = namesBrand;
     }
 
-    public List<MechanismsMolecular> getMechanismsMolecular() {
-        return mechanismsMolecular;
-    }
-
-    public void setMechanismsMolecular(List<MechanismsMolecular> mechanismsMolecular) {
-        this.mechanismsMolecular = mechanismsMolecular;
-    }
 
     public List<DevelopmentStatusSummary> getDevelopmentStatusSummary() {
         return developmentStatusSummary;
@@ -114,6 +106,22 @@ public class Drug {
 
     public void setDevelopmentStatusSummary(List<DevelopmentStatusSummary> developmentStatusSummary) {
         this.developmentStatusSummary = developmentStatusSummary;
+    }
+
+    public String getNameMain() {
+        return nameMain;
+    }
+
+    public void setNameMain(String nameMain) {
+        this.nameMain = nameMain;
+    }
+
+    public List<Mechanism> getMechanism() {
+        return mechanism;
+    }
+
+    public void setMechanism(List<Mechanism> mechanism) {
+        this.mechanism = mechanism;
     }
 
     @Override
@@ -124,7 +132,7 @@ public class Drug {
                 ", nameGeneric='" + nameGeneric + '\'' +
                 ", namesCode=" + namesCode +
                 ", namesBrand=" + namesBrand +
-                ", mechanismsMolecular=" + mechanismsMolecular +
+                ", mechanism=" + mechanism +
                 ", developmentStatusSummary=" + developmentStatusSummary +
                 '}';
     }

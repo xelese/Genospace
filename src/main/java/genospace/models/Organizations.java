@@ -1,12 +1,18 @@
 package genospace.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.util.List;
 
+/**
+ * This class represents the organizations table.
+ */
 @Entity
 @Table(name = "organization")
 public class Organizations {
@@ -16,15 +22,16 @@ public class Organizations {
 
     private String description;
 
-    @ManyToOne
+    @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
-    private DevelopmentStatusSummary developmentStatusSummary;
+    private List<DevelopmentStatusSummary> developmentStatusSummary;
 
     public Organizations() {
     }
 
     public void setDSSForOrg(DevelopmentStatusSummary dss) {
-        this.developmentStatusSummary = dss;
+        this.developmentStatusSummary.add(dss);
         if (!dss.getOrganizations().contains(this)) {
             dss.getOrganizations().add(this);
         }
@@ -46,13 +53,11 @@ public class Organizations {
         this.description = description;
     }
 
-    public DevelopmentStatusSummary getDevelopmentStatusSummary() {
+    public List<DevelopmentStatusSummary> getDevelopmentStatusSummary() {
         return developmentStatusSummary;
     }
 
-    public void setDevelopmentStatusSummary(DevelopmentStatusSummary developmentStatusSummary) {
+    public void setDevelopmentStatusSummary(List<DevelopmentStatusSummary> developmentStatusSummary) {
         this.developmentStatusSummary = developmentStatusSummary;
     }
-
-
 }
