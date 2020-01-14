@@ -19,7 +19,7 @@ async function updateResults() {
     }
 
     // This is the response sent to the backend for the query.
-    let response = await fetch('http://localhost:8080/find?name=' + query,
+    let response = await fetch('http://genospace.us-east-1.elasticbeanstalk.com/find?name=' + query,
         {
             method: 'GET',
             credentials: 'include',
@@ -85,7 +85,7 @@ async function showDrugInfo(id) {
     var info = document.getElementById("info")
 
     // hit the api key and fetch the drug data to be displayed.
-    response = await fetch('http://localhost:8080/find/drug/' + id, {
+    response = await fetch('http://genospace.us-east-1.elasticbeanstalk.com/find/drug/' + id, {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -108,7 +108,7 @@ async function showDrugInfo(id) {
  */
 async function showMechanismInfo(id) {
     var info = document.getElementById("info")
-    response = await fetch('http://localhost:8080/find/mechanism/' + id, {
+    response = await fetch('http://genospace.us-east-1.elasticbeanstalk.com/find/mechanism/' + id, {
         method: 'GET',
         credentials: 'include',
         headers: {

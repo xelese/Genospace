@@ -24,7 +24,7 @@ public class GenoSpaceController {
      * @return the list of drug objects followed by mechanism objects.
      */
     @GetMapping("/find")
-    @CrossOrigin(value = "http://localhost:8000", allowCredentials = "true")
+    @CrossOrigin(value = "http://genospace.us-east-1.elasticbeanstalk.com/", allowCredentials = "true")
     public List<Object> findByName(@RequestParam String name) {
         return genoSpaceDao.findByName(name);
     }
@@ -36,7 +36,7 @@ public class GenoSpaceController {
      * @return drug object that has all the details of the drug.
      */
     @GetMapping("/find/drug/{drugId}")
-    @CrossOrigin(value = "http://localhost:8000", allowCredentials = "true")
+    @CrossOrigin(value = "http://genospace.us-east-1.elasticbeanstalk.com/", allowCredentials = "true")
     public Drug findDrugById(@PathVariable("drugId") String id) {
         return genoSpaceDao.findDrugById(Integer.parseInt(id));
     }
@@ -48,7 +48,7 @@ public class GenoSpaceController {
      * @return list of all the drugs that are related to given mechanism.
      */
     @GetMapping("/find/mechanism/{mechanismId}")
-    @CrossOrigin(value = "http://localhost:8000", allowCredentials = "true")
+    @CrossOrigin(value = "http://genospace.us-east-1.elasticbeanstalk.com/", allowCredentials = "true")
     public List<Drug> findAllDrugsForMechanism(@PathVariable("mechanismId") String id) {
         return genoSpaceDao.findDrugForMechanism(Integer.parseInt(id));
     }
